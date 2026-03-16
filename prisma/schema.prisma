@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+
+  tripsOwned  Trip[]
+  tripMembers TripMember[]
+}
+
+model Trip {
+  id          String   @id @default(uuid())
+  title       String
+  destination String
+  startDate   DateTime
+  endDate     DateTime
+  budget      Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerId String
+  owner   User @relation(fields: [ownerId], references: [id])
+
+  itineraryDays ItineraryDay[]
+  expenses      Expense[]
+  members       TripMember[]
+}
+
+model TripMember {
+  id String @id @default(uuid())
+
+  role String @default("viewer")
+
+  userId String
+  tripId String
+
+  user User @relation(fields: [userId], references: [id])
+  trip Trip @relation(fields: [tripId], references: [id])
+
+  @@unique([userId, tripId])
+}
+
+model ItineraryDay {
+  id        String @id @default(uuid())
+  dayNumber Int
+  notes     String?
+
+  tripId String
+  trip   Trip @relation(fields: [tripId], references: [id])
+
+  activities Activity[]
+}
+
+model Activity {
+  id       String @id @default(uuid())
+  title    String
+  location String?
+  type     String?
+  startTime DateTime?
+
+  itineraryDayId String
+  itineraryDay   ItineraryDay @relation(fields: [itineraryDayId], references: [id])
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  amount      Float
+  category    String
+  description String?
+  date        DateTime
+
+  tripId String
+  trip   Trip @relation(fields: [tripId], references: [id])
+}
