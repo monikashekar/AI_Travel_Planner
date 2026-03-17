@@ -9,10 +9,15 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
 import { AiModule } from './modules/ai/ai.module';
 import { RecommendationsModule } from './modules/recommendations/recommendations.module';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
+import { ConfigModule } from '@nestjs/config/dist/config.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, TripsModule, ItineraryModule, ExpensesModule, AiModule, RecommendationsModule,  DatabaseModule,
-    TripsModule,],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule, UsersModule, TripsModule, ItineraryModule, ExpensesModule, AiModule, RecommendationsModule,  DatabaseModule,
+    TripsModule,ItineraryModule, ExpensesModule],
   controllers: [AppController],
   providers: [AppService],
 })

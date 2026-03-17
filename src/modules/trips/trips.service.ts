@@ -32,23 +32,42 @@ export class TripsService {
   }
 
   async updateTrip(tripId: string, userId: string, data: any) {
-
     const trip = await this.tripsRepo.findTripById(tripId)
-
     console.log("Trip ID:", tripId)
     console.log("Trip found:", trip)
-  
     if (!trip) {
       throw new NotFoundException("Trip not found")
     }
-  
     if (trip.ownerId !== userId) {
       throw new ForbiddenException("You cannot edit this trip")
     }
-
-  
     return this.tripsRepo.updateTrip(tripId, data)
-  
+  }
+
+  async getTripSummary(userId: string, tripId: string) {
+    const trip = await this.tripsRepo.getTripSummary(tripId);
+    if (!trip) {
+      throw new Error("Trip not found");
+    }
+    if (trip.ownerId !== userId) {
+      throw new Error("Unauthorized");
+    }
+    const totalExpenses = trip.expenses.reduce(
+      (sum, e) => sum + e.amount,
+      0
+    );
+    const totalActivities = trip.itineraryDays.reduce(
+      (sum, d) => sum + d.activities.length,
+      0
+    );
+    const totalDays = trip.itineraryDays.length;
+    return {
+      budget: trip.budget,
+      totalExpenses,
+      remainingBudget: (trip.budget ?? 0) - totalExpenses,
+      totalActivities,
+      totalDays
+    };
   }
 
 }

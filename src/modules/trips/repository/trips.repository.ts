@@ -68,7 +68,21 @@ export class TripsRepository {
       where: { id: tripId },
       data
     });
-  
+  }
+
+  async getTripSummary(tripId: string) {
+    const trip = await this.prisma.trip.findUnique({
+      where: { id: tripId },
+      include: {
+        expenses: true,
+        itineraryDays: {
+          include: {
+            activities: true
+          }
+        }
+      }
+    });
+    return trip;
   }
 
 }

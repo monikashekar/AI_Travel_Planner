@@ -70,4 +70,13 @@ updateTrip(
 ) {
   return this.tripsService.updateTrip(id, userId, dto)
 }
+
+@Get(":id/summary")
+@UseGuards(JwtAuthGuard)
+getTripSummary(
+  @Param("id") id: string,
+  @CurrentUser() userId: string
+) {
+  return this.tripsService.getTripSummary(userId, id);
+}
   }
