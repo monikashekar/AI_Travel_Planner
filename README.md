@@ -1,9 +1,3 @@
-Below is a **clean, professional README** you can use for your GitHub repository. It explains your project clearly and will look good to **recruiters and hiring managers** reviewing your backend work.
-
-You can paste this into a file called **`README.md`** in your project root.
-
----
-
 # AI Travel Planner Backend
 
 A backend API for an **AI-powered travel planning application** that helps users create trips, organize itineraries, track expenses, and generate travel plans using AI.
